@@ -20,6 +20,7 @@ class Recipe:
     category: str
     priority: int
     available: bool
+    craftable: bool | None
 
 
 @dataclasses.dataclass
@@ -76,6 +77,7 @@ UnlockType = Union[UnlockRecipe]
 @dataclasses.dataclass
 class Research:
     id: str
+    name: str
     unlocks: list[UnlockType]
     prerequisites: list[str] | None
 

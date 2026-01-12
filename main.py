@@ -10,6 +10,8 @@ from models import (
     Item,
     StackSizeDict,
     ItemIOPattern,
+    Research,
+    UnlockRecipe,
 )
 
 
@@ -30,6 +32,12 @@ def dump(obj):
     return obj
 
 
+def removeAll(src: str, to_remove: list[str]) -> str:
+    for rep in to_remove:
+        src = src.replace(rep, "")
+    return src
+
+
 def purge_optional_fields(obj):
     # if name is not present, it's an implicit null
     # => we can delete the field when it's null
@@ -37,7 +45,7 @@ def purge_optional_fields(obj):
         return {
             k: purge_optional_fields(v)
             for k, v in obj.items()
-            if not (k == "name" and v is None)
+            if not (k in ["name", "craftable"] and v is None)
         }
     elif isinstance(obj, list):
         return [purge_optional_fields(x) for x in obj]
@@ -78,6 +86,8 @@ def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
     out = []
     for r in recipes:
         id = unclassname(r["ClassName"], "Recipe")
+        if id == "trading-post":
+            continue
         if r["mProducedIn"] == "":
             category = ["build-gun"]
         elif "FGBuildGun" in r["mProducedIn"]:
@@ -117,6 +127,12 @@ def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
         else:
             prio = 10
 
+        if category in [["equipment-workshop"], ["build-gun"]]:
+            print("here")
+            craftable = False
+        else:
+            craftable = None
+
         out.append(
             Recipe(
                 id,
@@ -127,6 +143,7 @@ def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
                 category[0],
                 prio,
                 True,
+                craftable,
             )
         )
     return out
@@ -226,6 +243,47 @@ def get_items(items: list[dict]) -> list[Item]:
     return out
 
 
+def get_research(research: list) -> list[Research]:
+    out = []
+    for r in research:
+        if r["mType"] in ["EST_ResourceSink", "EST_Custom"]:
+            continue
+        id = uncamelcase(r["ClassName"]).removesuffix("-c")
+        name = r["mDisplayName"].replace(".", "").replace("\u00a0", "")
+        match r["mType"]:
+            case "EST_Milestone":
+                name += f" (Tier {r['mTechTier']})"
+            case "EST_Alternate":
+                name += " Harddrive"
+            case "EST_Tutorial":
+                pass
+            case default:
+                name += " (MAM)"
+        unlocks = []
+        for u in r["mUnlocks"]:
+            if u["Class"] == "BP_UnlockRecipe_C":
+                unlocks += [
+                    uncamelcase(
+                        re.findall(r"/Recipe_(?P<name>[^\.]+).*$", a.split("'")[1])[0]
+                    )
+                    for a in u["mRecipes"].split(",")
+                    if "Shared/Customization/" not in a
+                ]
+        deps = []
+        for d in r["mSchematicDependencies"]:
+            if d["Class"] == "BP_SchematicPurchasedDependency_C":
+                deps += [
+                    uncamelcase(a.split(".")[-1].split("_C'")[0])
+                    for a in d["mSchematics"].split(",")
+                ]
+        if len(deps) == 0:
+            deps = None
+        if len(unlocks) == 0:
+            continue
+        out.append(Research(id, name, [UnlockRecipe("recipe", unlocks)], deps))
+    return out
+
+
 def construct_profile(data: list) -> dict:
     r = {}
     for c in data:
@@ -245,7 +303,7 @@ def construct_profile(data: list) -> dict:
     recipes = get_recipes(r["Recipe"], items)
 
     effectmodules = []
-    research = []
+    research = get_research(r["Schematic"])
 
     machines = []
     for part in ["furnace", "assembling-machine"]:
