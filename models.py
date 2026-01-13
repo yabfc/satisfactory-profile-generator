@@ -92,5 +92,5 @@ StackSizeDict = {
 }
 
 ItemIOPattern = re.compile(
-    r"/(Parts|Resource/RawResources)/[^/]+/Desc_(?P<name>[^\.]+)[^']+'.*?Amount=(?P<amount>\d+)"
+    r"/(Parts|Resource/[^/]+|Equipment|Equipment/[^/]+|Buildable/[^/]+|Buildable/[^/]+/[^/]+)/[^/]+/(Desc_|BP_EquipmentDescriptor|BP_EqDesc|BP_ItemDescriptor)(?P<name>[^\.]+)[^']+'.*?Amount=(?P<amount>\d+)"
 )

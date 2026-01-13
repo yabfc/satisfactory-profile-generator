@@ -72,10 +72,10 @@ def uncamelcase(src: str) -> str:
     return s.lower().replace("_", "-")
 
 
-def unclassname(src: str, c: str) -> str:
-    return uncamelcase(re.sub(rf"{c}_(.*?)_C$", r"\1", src).replace("_", "-")).replace(
-        "--", "-"
-    )
+def unclassname(src: str, classes: list[str]) -> str:
+    for c in classes:
+        src = re.sub(rf"{c}(.*?)_C$", r"\1", src)
+    return uncamelcase(src).replace("_", "-").replace("--", "-")
 
 
 def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
@@ -85,12 +85,16 @@ def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
 
     out = []
     for r in recipes:
-        id = unclassname(r["ClassName"], "Recipe")
-        if id == "trading-post":
+        id = unclassname(r["ClassName"], ["Recipe_"])
+        if (
+            id in ["trading-post", "candy-cane", "snowball"]
+            or "fireworks" in id
+            or "foundation" in id
+        ):
             continue
-        if r["mProducedIn"] == "":
-            category = ["build-gun"]
-        elif "FGBuildGun" in r["mProducedIn"]:
+        if "FICSMAS" in r["mDisplayName"] or "Braided" in r["mDisplayName"]:
+            continue
+        if r["mProducedIn"] == "" or "FGBuildGun" in r["mProducedIn"]:
             category = ["build-gun"]
         else:
             category = [
@@ -115,8 +119,11 @@ def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
                     "automated-work-bench",
                 ]
             ]
+
         if len(category) == 0:
             category = ["equipment-workshop"]
+        if category[0] == "build-gun" and "beam" in id:
+            continue
 
         if "alternate" in id:
             prio = 20
@@ -128,7 +135,6 @@ def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
             prio = 10
 
         if category in [["equipment-workshop"], ["build-gun"]]:
-            print("here")
             craftable = False
         else:
             craftable = None
@@ -161,17 +167,19 @@ def get_items(items: list[dict]) -> list[Item]:
     for i in items:
         if "mForm" not in i.keys():
             continue
-        id = unclassname(i["ClassName"], "Desc")
+        id = unclassname(i["ClassName"], ["Desc_", "BP_EquipmentDescriptor"])
+        # print(i["ClassName"])
         name = i["mDisplayName"].replace("\u202f", "").replace("\u2122", "")
         if name == "":
             continue
 
         # maybe find a better way for the categorizing
-        if "-ore" in id or id in ["coal", "sam", "quartz-crystal"]:
+        if "ore-" in id or id in ["coal", "sam", "quartz-crystal"]:
             category = "raw-resource"
         elif (
             "iron-" in id
             or "copper-" in id
+            or "ingot" in id
             or id
             in [
                 "iron-rod",
@@ -257,7 +265,7 @@ def get_research(research: list) -> list[Research]:
                 name += " Harddrive"
             case "EST_Tutorial":
                 pass
-            case default:
+            case _:
                 name += " (MAM)"
         unlocks = []
         for u in r["mUnlocks"]:
@@ -298,7 +306,7 @@ def construct_profile(data: list) -> dict:
 
     items = []
     for k, v in r.items():
-        if "ItemDescriptor" in k or ["ResourceDescriptor" in k]:
+        if "ItemDescriptor" in k or k in ["ResourceDescriptor", "EquipmentDescriptor"]:
             items += get_items(v)
     recipes = get_recipes(r["Recipe"], items)
 
