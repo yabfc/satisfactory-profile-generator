@@ -13,7 +13,7 @@ class BaseItemIo:
 @dataclasses.dataclass
 class Recipe:
     id: str
-    name: str
+    name: str | None
     inp: list[BaseItemIo] = dataclasses.field(metadata={"alias": "in"})
     out: list[BaseItemIo]
     duration: int
@@ -55,6 +55,7 @@ class Modifier:
     value: float
     modifiable: bool
     onlyOutputScales: bool
+    valueScaling: None | Literal["exponential"]
 
 
 @dataclasses.dataclass
@@ -90,7 +91,3 @@ StackSizeDict = {
     "SS_HUGE": 500,
     "SS_FLUID": 0,
 }
-
-ItemIOPattern = re.compile(
-    r"/(Parts|Resource/[^/]+|Equipment|Equipment/[^/]+|Buildable/[^/]+|Buildable/[^/]+/[^/]+)/[^/]+/(Desc_|BP_EquipmentDescriptor|BP_EqDesc|BP_ItemDescriptor)(?P<name>[^\.]+)[^']+'.*?Amount=(?P<amount>\d+)"
-)
