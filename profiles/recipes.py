@@ -1,3 +1,4 @@
+from unicodedata import category
 from profiles import BaseItemIo, Recipe, Item
 from profiles.utils import uncamelcase, unclassname
 import re
@@ -23,19 +24,27 @@ def get_base_item_io(iio: str, itemtype: dict) -> list[BaseItemIo]:
     ]
 
 
-def get_recipes_from_raw_minables(items: list[Item]) -> list[Recipe]:
+def get_recipes_from_item_categories(items: list[Item]) -> list[Recipe]:
     out = []
     for item in items:
-        if item.category != "raw-ressource":
+        if item.category not in ["raw-ressource", "organic"] and "waste" not in item.id:
             continue
+        category = ""
+        if item.category == "raw-ressource":
+            category = "miner"
+        elif item.category == "organic":
+            category = "manual-harvest"
+        else:
+            category = "reactor-TODO"
+        
         out.append(
             Recipe(
                 item.id,
                 item.name,
                 [],
-                [BaseItemIo(item.id, "item", 1)],
+                [BaseItemIo(item.id, item.type, 1)],
                 1,
-                "miner",
+                category,
                 10,
                 True,
                 None,

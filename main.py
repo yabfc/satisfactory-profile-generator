@@ -8,11 +8,12 @@ from profiles.items import get_items
 from profiles.recipes import (
     get_recipes,
     get_recipes_from_fluid_extractors,
-    get_recipes_from_raw_minables,
+    get_recipes_from_item_categories,
 )
 from profiles.research import get_research
 from profiles.utils import purge_optional_fields, dump
 from profiles.machines import get_machines, OVERCLOCKING, UNDERCLOCKING, SUMMERSLOOPING
+from profiles.validate import validate_recipes
 
 
 def construct_profile(data: list) -> dict:
@@ -28,12 +29,16 @@ def construct_profile(data: list) -> dict:
 
     items = []
     for k, v in r.items():
-        if "ItemDescriptor" in k or k in ["ResourceDescriptor", "EquipmentDescriptor"]:
+        if "ItemDescriptor" in k or k in [
+            "ResourceDescriptor",
+            "EquipmentDescriptor",
+            "ConsumableDescriptor",
+        ]:
             items += get_items(v)
     recipes = get_recipes(r["Recipe"], items)
     recipes += get_recipes_from_fluid_extractors(r["BuildableResourceExtractor"])
     recipes += get_recipes_from_fluid_extractors(r["BuildableFrackingExtractor"])
-    recipes += get_recipes_from_raw_minables(items)
+    recipes += get_recipes_from_item_categories(items)
 
     effectmodules = [OVERCLOCKING, UNDERCLOCKING, SUMMERSLOOPING]
     research = get_research(r["Schematic"])
@@ -47,6 +52,8 @@ def construct_profile(data: list) -> dict:
         tmpmachines, tmpem = get_machines(r.get(part, {}))
         machines += tmpmachines
         effectmodules += tmpem
+
+    validate_recipes(recipes)
 
     return purge_optional_fields(
         {

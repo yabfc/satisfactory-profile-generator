@@ -67,15 +67,22 @@ def get_items(items: list[dict]) -> list[Item]:
         elif id in [
             "biomass",
             "alien-protein",
-            "paleberry",
+            "berry",
             "wood",
             "alien-remains",
             "leaves",
             "somersloop",
             "mercer-sphere",
-            "power-slug",
-            "flower-petals",
-            "beryl-nut",
+            "crystal-mk3",
+            "crystal-mk2",
+            "crystal",
+            "shroom",
+            "nut",
+            "mycelia",
+            "hog-parts",
+            "stinger-parts",
+            "hatcher-parts",
+            "spitter-parts",
         ]:
             category = "organic"
         elif "packaged-" in id:
