@@ -23,7 +23,7 @@ UNDERCLOCKING = EffectModule(
 
 SUMMERSLOOPING = EffectModule(
     "summerslooping",
-    [FixedModifier("speed", 2, False, True, None), FixedModifier("power", 5, False, False, None)],
+    [FixedModifier("speed", 2, False, True, None), FixedModifier("power", 4, False, False, None)],
     False,
     True,
 )
