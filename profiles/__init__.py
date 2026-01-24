@@ -37,6 +37,7 @@ class MachineFeature:
     id: str
     itemSlots: int
     effectPerSlot: list[str]
+    disables: list[str] | None
 
 
 @dataclasses.dataclass
@@ -50,18 +51,29 @@ class Machine:
 
 
 @dataclasses.dataclass
-class Modifier:
+class FixedModifier:
     id: str
     value: float
-    modifiable: bool
+    modifiable: Literal[False]
     onlyOutputScales: bool
     valueScaling: None | Literal["exponential"]
 
 
 @dataclasses.dataclass
+class VariableModifier:
+    id: str
+    min_value: float
+    max_value: float
+    modifiable: Literal[True]
+    onlyOutputScales: bool
+    valueScaling: None | Literal["exponential"]
+
+ModifierType = Union[FixedModifier, VariableModifier]
+
+@dataclasses.dataclass
 class EffectModule:
     id: str
-    modifiers: list[Modifier]
+    modifiers: list[ModifierType]
     perSlot: bool
     available: bool
 
