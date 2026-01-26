@@ -36,7 +36,7 @@ def get_recipes_from_item_categories(items: list[Item]) -> list[Recipe]:
             category = "manual-harvest"
         else:
             category = "reactor-TODO"
-        
+
         out.append(
             Recipe(
                 item.id,
