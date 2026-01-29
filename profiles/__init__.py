@@ -1,6 +1,5 @@
 import dataclasses
-from typing import Union, Literal
-import re
+from typing import Literal, Union
 
 
 @dataclasses.dataclass
@@ -63,8 +62,8 @@ class FixedModifier:
 @dataclasses.dataclass
 class VariableModifier:
     id: str
-    min_value: float
-    max_value: float
+    minValue: float
+    maxValue: float
     modifiable: Literal[True]
     onlyOutputScales: bool
     valueScaling: None | Literal["exponential"]
