@@ -1,8 +1,6 @@
 import json
 import sys
 import os
-import dataclasses
-import re
 
 from profiles.items import get_items
 from profiles.recipes import (

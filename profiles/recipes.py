@@ -1,4 +1,3 @@
-from unicodedata import category
 from profiles import BaseItemIo, Recipe, Item
 from profiles.utils import uncamelcase, unclassname
 import re

@@ -1,4 +1,4 @@
-from profiles import Research, UnlockRecipe, UnlockType
+from profiles import Research, UnlockRecipe
 from profiles.utils import uncamelcase
 import re
 

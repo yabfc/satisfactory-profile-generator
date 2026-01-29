@@ -5,8 +5,7 @@ from profiles import (
     VariableModifier,
     FixedModifier,
 )
-import re
-from profiles.utils import uncamelcase, unclassname
+from profiles.utils import unclassname
 
 OVERCLOCKING = EffectModule(
     "overclocking",
