@@ -40,5 +40,5 @@ def get_research(research: list) -> list[Research]:
             deps = None
         if len(unlocks) == 0:
             continue
-        out.append(Research(id, name, [UnlockRecipe("recipe", unlocks)], deps))
+        out.append(Research(id, name, False, [UnlockRecipe("recipe", unlocks)], deps))
     return out

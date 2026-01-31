@@ -36,6 +36,11 @@ def get_recipes_from_item_categories(items: list[Item]) -> list[Recipe]:
         else:
             category = "reactor-TODO"
 
+        if item.id == "iron-plate" or item.id == "iron-rod":
+            available = True
+        else:
+            available = False
+
         out.append(
             Recipe(
                 item.id,
@@ -45,7 +50,7 @@ def get_recipes_from_item_categories(items: list[Item]) -> list[Recipe]:
                 1,
                 category,
                 10,
-                True,
+                available,
                 None,
             )
         )
@@ -73,7 +78,7 @@ def get_recipes_from_fluid_extractors(machines: list[dict]) -> list[Recipe]:
                     1,
                     machine_id,
                     10,
-                    True,
+                    False,
                     None,
                 )
             )
@@ -137,9 +142,14 @@ def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
             prio = 10
 
         if category in [["equipment-workshop"], ["build-gun"]]:
+            available = True
             craftable = False
         else:
             craftable = None
+            available = False
+
+        if id == "iron-plate" or id == "iron-rod":
+            available = True
 
         out.append(
             Recipe(
@@ -150,7 +160,7 @@ def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
                 int(float(r["mManufactoringDuration"])),
                 category[0],
                 prio,
-                True,
+                available,
                 craftable,
             )
         )

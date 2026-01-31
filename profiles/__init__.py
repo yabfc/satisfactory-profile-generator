@@ -93,6 +93,7 @@ UnlockType = Union[UnlockRecipe]
 class Research:
     id: str
     name: str
+    unlocked: bool
     unlocks: list[UnlockType]
     prerequisites: list[str] | None
 
