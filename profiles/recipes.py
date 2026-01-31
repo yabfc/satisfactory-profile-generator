@@ -17,7 +17,7 @@ def get_base_item_io(iio: str, itemtype: dict) -> list[BaseItemIo]:
             itemtype.get(uncamelcase(match.group("name")), "item"),
             int(match.group("amount"))
             if itemtype.get(uncamelcase(match.group("name")), "item") == "item"
-            else int(match.group("amount")) // 100,
+            else int(match.group("amount")) // 1000,
         )
         for match in ItemIOPattern.finditer(iio)
     ]
