@@ -19,14 +19,14 @@ def get_research(research: list) -> list[Research]:
                 pass
             case _:
                 name += " (MAM)"
-        unlocks = []
-        for u in r["mUnlocks"]:
-            if u["Class"] == "BP_UnlockRecipe_C":
-                unlocks += [
+        unlocks_recipes = []
+        for unlocks in r["mUnlocks"]:
+            if unlocks["Class"] == "BP_UnlockRecipe_C":
+                unlocks_recipes += [
                     uncamelcase(
                         re.findall(r"/Recipe_(?P<name>[^\.]+).*$", a.split("'")[1])[0]
                     )
-                    for a in u["mRecipes"].split(",")
+                    for a in unlocks["mRecipes"].split(",")
                     if "Shared/Customization/" not in a
                 ]
         deps = []
@@ -36,9 +36,10 @@ def get_research(research: list) -> list[Research]:
                     uncamelcase(a.split(".")[-1].split("_C'")[0])
                     for a in d["mSchematics"].split(",")
                 ]
+        unlocks = []
         if len(deps) == 0:
             deps = None
-        if len(unlocks) == 0:
-            continue
-        out.append(Research(id, name, False, [UnlockRecipe("recipe", unlocks)], deps))
+        if len(unlocks_recipes) != 0:
+            unlocks.append(UnlockRecipe("recipe", unlocks_recipes))
+        out.append(Research(id, name, False, unlocks, deps))
     return out
