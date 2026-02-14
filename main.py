@@ -11,7 +11,14 @@ from profiles.recipes import (
 )
 from profiles.research import get_research
 from profiles.utils import purge_optional_fields, dump
-from profiles.machines import get_machines, OVERCLOCKING, UNDERCLOCKING, SUMMERSLOOPING
+from profiles.machines import (
+    get_machines,
+    OVERCLOCKING,
+    UNDERCLOCKING,
+    SUMMERSLOOPING,
+    OVERCLOCKING_LIN,
+    UNDERCLOCKING_LIN,
+)
 from profiles.validate import validate_recipes
 
 
@@ -42,7 +49,13 @@ def construct_profile(data: list) -> dict:
         r["BuildableGeneratorNuclear"], r["ItemDescriptorNuclearFuel"]
     )
 
-    effectmodules = [OVERCLOCKING, UNDERCLOCKING, SUMMERSLOOPING]
+    effectmodules = [
+        OVERCLOCKING,
+        UNDERCLOCKING,
+        SUMMERSLOOPING,
+        OVERCLOCKING_LIN,
+        UNDERCLOCKING_LIN,
+    ]
     research = get_research(r["Schematic"])
     machines = []
     # BuildableManufacturerVariablePower
@@ -50,6 +63,7 @@ def construct_profile(data: list) -> dict:
         "BuildableResourceExtractor",
         "BuildableManufacturer",
         "BuildableFrackingExtractor",
+        "BuildableGeneratorNuclear",
     ]:
         tmpmachines, tmpem = get_machines(r.get(part, {}))
         machines += tmpmachines

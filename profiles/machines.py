@@ -26,6 +26,26 @@ UNDERCLOCKING = EffectModule(
     True,
 )
 
+OVERCLOCKING_LIN = EffectModule(
+    "overclocking-lin",
+    [
+        VariableModifier("speed", 1, 2.5, True, False, None),
+        FixedModifier("power", 2.5, False, False, None),
+    ],
+    False,
+    True,
+)
+
+UNDERCLOCKING_LIN = EffectModule(
+    "underclocking-lin",
+    [
+        VariableModifier("speed", 0, 1, True, False, None),
+        FixedModifier("power", 1, False, False, None),
+    ],
+    False,
+    True,
+)
+
 SUMMERSLOOPING = EffectModule(
     "summerslooping",
     [
@@ -74,14 +94,16 @@ def get_machines(old_machines: list[dict]) -> tuple[list[Machine], list[EffectMo
                         "summerslooping", sloops, ["summerslooping"], None, None
                     )
                 )
-        features.append(
-            MachineFeature("overclocking", 3, ["overclocking"], ["underclocking"], None)
-        )
-        features.append(
-            MachineFeature(
-                "underclocking", 0, ["underclocking"], ["overclocking"], None
-            )
-        )
+        underclock = "underclocking"
+        overclock = "overclocking"
+
+        # power scales linear with reactors
+        if id == "generator-nuclear":
+            underclock = "underclocking-lin"
+            overclock = "overclocking-lin"
+
+        features.append(MachineFeature(overclock, 3, [overclock], [underclock], None))
+        features.append(MachineFeature(underclock, 0, [underclock], [overclock], None))
 
         consumption = int(float(machine.get("mPowerConsumption", "0.0")) * 1000 * 1000)
         machines.append(Machine(id, categories, consumption, features, True, None))
