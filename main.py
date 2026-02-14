@@ -7,6 +7,7 @@ from profiles.recipes import (
     get_recipes,
     get_recipes_from_fluid_extractors,
     get_recipes_from_item_categories,
+    get_recipes_from_nuclear_reactor,
 )
 from profiles.research import get_research
 from profiles.utils import purge_optional_fields, dump
@@ -37,6 +38,9 @@ def construct_profile(data: list) -> dict:
     recipes += get_recipes_from_fluid_extractors(r["BuildableResourceExtractor"])
     recipes += get_recipes_from_fluid_extractors(r["BuildableFrackingExtractor"])
     recipes += get_recipes_from_item_categories(items)
+    recipes += get_recipes_from_nuclear_reactor(
+        r["BuildableGeneratorNuclear"], r["ItemDescriptorNuclearFuel"]
+    )
 
     effectmodules = [OVERCLOCKING, UNDERCLOCKING, SUMMERSLOOPING]
     research = get_research(r["Schematic"])

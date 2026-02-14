@@ -5,7 +5,6 @@ from typing import Literal, Union
 @dataclasses.dataclass
 class BaseItemIo:
     id: str
-    type: str
     amount: int
 
 

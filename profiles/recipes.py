@@ -14,7 +14,6 @@ def get_base_item_io(iio: str, itemtype: dict) -> list[BaseItemIo]:
         BaseItemIo(
             uncamelcase(match.group("name")),
             # switch default case here to building maybe
-            itemtype.get(uncamelcase(match.group("name")), "item"),
             int(match.group("amount"))
             if itemtype.get(uncamelcase(match.group("name")), "item") == "item"
             else int(match.group("amount")) // 1000,
@@ -34,14 +33,15 @@ def get_recipes_from_item_categories(items: list[Item]) -> list[Recipe]:
         elif item.category == "organic":
             category = "manual-harvest"
         else:
-            category = "reactor-TODO"
+            # reactors are handled in another function
+            continue
 
         out.append(
             Recipe(
                 item.id,
                 item.name,
                 [],
-                [BaseItemIo(item.id, item.type, 1)],
+                [BaseItemIo(item.id, 1)],
                 1,
                 category,
                 10,
@@ -49,6 +49,42 @@ def get_recipes_from_item_categories(items: list[Item]) -> list[Recipe]:
                 None,
             )
         )
+    return out
+
+
+def get_recipes_from_nuclear_reactor(
+    reactors: list[dict], nuclear_fuel: list[dict]
+) -> list[Recipe]:
+    out = []
+    fuel = {}
+    for f in nuclear_fuel:
+        fuel[unclassname(f["ClassName"], ["Desc_"])] = int(
+            float(f.get("mEnergyValue", "0"))
+        )
+    for reactor in reactors:
+        id = unclassname(reactor["ClassName"], ["Build_"])
+        fuel_in_amt = int(reactor.get("mFuelLoadAmount", "0"))
+        power_output = int(float(reactor.get("mPowerProduction", "0")))
+        for fuel_dict in reactor.get("mFuel", []):
+            fuel_in = unclassname(fuel_dict["mFuelClass"], ["Desc_"])
+            byproduct = unclassname(fuel_dict["mByproduct"], ["Desc_"])
+            byproduct_amt = fuel_dict.get("mByproductAmount", "0")
+            byproduct_amt = int(float(byproduct_amt)) if byproduct_amt != "" else 0
+            duration = fuel[fuel_in] / power_output
+            out.append(
+                Recipe(
+                    byproduct,
+                    None,
+                    [BaseItemIo(fuel_in, fuel_in_amt)],
+                    [BaseItemIo(byproduct, byproduct_amt)] if byproduct != "" else [],
+                    duration,
+                    id,
+                    10,
+                    False,
+                    None,
+                )
+            )
+
     return out
 
 
@@ -69,7 +105,7 @@ def get_recipes_from_fluid_extractors(machines: list[dict]) -> list[Recipe]:
                     f"{fluid}-{machine_id}",
                     None,
                     [],
-                    [BaseItemIo(fluid, "fluid", amount)],
+                    [BaseItemIo(fluid, amount)],
                     1,
                     machine_id,
                     10,
