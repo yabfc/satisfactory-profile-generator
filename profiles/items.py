@@ -94,7 +94,7 @@ def get_items(items: list[dict]) -> list[Item]:
             category = "advanced-product"
 
         # we don't need to save the name if the id is the same
-        if id == name.replace(" ", "-").lower():
+        if id == name.replace(" ", "-").lower() or name == "":
             name = None
 
         out.append(
