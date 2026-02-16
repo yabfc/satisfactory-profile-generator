@@ -64,6 +64,7 @@ def construct_profile(data: list) -> dict:
         "BuildableManufacturer",
         "BuildableFrackingExtractor",
         "BuildableGeneratorNuclear",
+        "BuildableManufacturerVariablePower",
     ]:
         tmpmachines, tmpem = get_machines(r.get(part, {}))
         machines += tmpmachines

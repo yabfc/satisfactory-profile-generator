@@ -61,7 +61,7 @@ def get_machines(old_machines: list[dict]) -> tuple[list[Machine], list[EffectMo
     machines = []
     modules = []
     for machine in old_machines:
-        id = unclassname(machine["ClassName"], ["Build_"])
+        id = unclassname(machine["ClassName"], ["Build_", "Desc_"])
         categories = []
         if machine.get("mExtractorTypeName", "") == "Miner":
             categories = ["miner"]

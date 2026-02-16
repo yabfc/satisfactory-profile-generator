@@ -40,7 +40,7 @@ def validate_machines(machines: list[Machine], recipes: list[Recipe]) -> bool:
     for m in machines:
         categories_machine |= set(m.recipeCategories)
     for id in categories_recipe.difference(categories_machine):
-        if id == "manual-harvest":
+        if id in ["manual-harvest", "build-gun", "equipment-workshop"]:
             print(
                 f"{id} is expected to not have a machine assigned. You are the machine"
             )
