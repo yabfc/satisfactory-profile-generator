@@ -19,7 +19,7 @@ from profiles.machines import (
     OVERCLOCKING_LIN,
     UNDERCLOCKING_LIN,
 )
-from profiles.validate import validate_recipes
+from profiles.validate import validate_recipes, validate_items, validate_machines
 
 
 def construct_profile(data: list) -> dict:
@@ -70,6 +70,8 @@ def construct_profile(data: list) -> dict:
         effectmodules += tmpem
 
     validate_recipes(recipes)
+    validate_items(items, recipes)
+    validate_machines(machines, recipes)
 
     return purge_optional_fields(
         {
