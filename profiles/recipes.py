@@ -71,9 +71,12 @@ def get_recipes_from_nuclear_reactor(
             byproduct_amt = fuel_dict.get("mByproductAmount", "0")
             byproduct_amt = int(float(byproduct_amt)) if byproduct_amt != "" else 0
             duration = fuel[fuel_in] / power_output
+            recipe_id = byproduct
+            if byproduct == "":
+                recipe_id = f"{fuel_in}-{id}"
             out.append(
                 Recipe(
-                    byproduct,
+                    recipe_id,
                     None,
                     [BaseItemIo(fuel_in, fuel_in_amt)],
                     [BaseItemIo(byproduct, byproduct_amt)] if byproduct != "" else [],
