@@ -35,10 +35,10 @@ def construct_profile(data: list) -> dict:
 
     items = []
     for k, v in r.items():
-        if "ItemDescriptor" in k or k in [
-            "ResourceDescriptor",
-            "EquipmentDescriptor",
-            "ConsumableDescriptor",
+        if "Descriptor" in k or k in [
+            "AmmoTypeProjectile",
+            "AmmoTypeSpreadshot",
+            "AmmoTypeInstantHit",
         ]:
             items += get_items(v)
     recipes = get_recipes(r["Recipe"], items)

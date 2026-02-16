@@ -14,11 +14,14 @@ def get_items(items: list[dict]) -> list[Item]:
     for i in items:
         if "mForm" not in i.keys():
             continue
-        id = unclassname(i["ClassName"], ["Desc_", "BP_EquipmentDescriptor"])
+        id = unclassname(
+            i["ClassName"],
+            ["Desc_", "BP_EquipmentDescriptor", "BP_ItemDescriptor", "BP_EqDesc"],
+        )
         if id == "candy-cane":
             continue
         name = i["mDisplayName"].replace("\u202f", "").replace("\u2122", "")
-        if name == "":
+        if name == "" and id == "":
             continue
 
         # maybe find a better way for the categorizing
