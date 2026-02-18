@@ -1,11 +1,10 @@
-from profiles import BaseItemIo, Recipe, Item
+from profiles import BaseItemIo, Recipe, Item, RessourcePattern
 from profiles.utils import uncamelcase, unclassname
 import re
 
 ItemIOPattern = re.compile(
     r"/(Parts|Resource/[^/]+|Equipment|Equipment/[^/]+|Buildable/[^/]+|Buildable/[^/]+/[^/]+)/[^/]+/(Desc_|BP_EquipmentDescriptor|BP_EqDesc|BP_ItemDescriptor)(?P<name>[^\.]+)[^']+'.*?Amount=(?P<amount>\d+)"
 )
-RessourcePattern = re.compile(r"/Resource/[^/]+/[^/]+/Desc_(?P<name>[^\.]+)[^']+'")
 
 
 def get_base_item_io(iio: str, itemtype: dict) -> list[BaseItemIo]:

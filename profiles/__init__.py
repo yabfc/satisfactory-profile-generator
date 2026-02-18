@@ -1,5 +1,8 @@
 import dataclasses
 from typing import Literal, Union
+import re
+
+RessourcePattern = re.compile(r"/Resource/[^/]+/[^/]+/Desc_(?P<name>[^\.]+)[^']+'")
 
 
 @dataclasses.dataclass

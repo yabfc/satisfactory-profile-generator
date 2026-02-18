@@ -1,4 +1,4 @@
-from profiles import Recipe
+from profiles import Recipe, Research
 
 
 def validate_recipes(recipes: list[Recipe]) -> bool:
@@ -17,3 +17,15 @@ def validate_recipes(recipes: list[Recipe]) -> bool:
     for id in ids_in.difference(ids_out):
         print(f"Item can't be produced: {id}")
     return len(ids_in.difference(ids_out)) == 0
+
+
+def validate_research(research: list[Research]) -> bool:
+    research_ids = set()
+    research_prerequs = set()
+    for r in research:
+        if r.prerequisites:
+            research_prerequs |= set(r.prerequisites)
+        research_ids.add(r.id)
+    for id in research_prerequs.difference(research_ids):
+        print(f"Research is a prerequisite but can't be researched: {id}")
+    return len(research_prerequs.difference(research_ids)) == 0

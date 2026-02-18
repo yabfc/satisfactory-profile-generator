@@ -1,4 +1,4 @@
-from profiles import Research, UnlockRecipe
+from profiles import Research, UnlockRecipe, RessourcePattern
 from profiles.utils import uncamelcase
 import re
 
@@ -43,9 +43,13 @@ SE4 = Research(
 def get_research(research: list) -> list[Research]:
     out = [SE1, SE2, SE3, SE4]
     for r in research:
-        if r["mType"] in ["EST_ResourceSink", "EST_Custom"]:
+        if r["mType"] in ["EST_ResourceSink"]:
             continue
         id = uncamelcase(r["ClassName"]).removesuffix("-c")
+
+        # skip AWESOME shop unlockables
+        if id.startswith("cbg-"):
+            continue
         name = r["mDisplayName"].replace(".", "").replace("\u00a0", "")
         tier = None
         match r["mType"]:
@@ -68,6 +72,13 @@ def get_research(research: list) -> list[Research]:
                     for a in unlocks["mRecipes"].split(",")
                     if "Shared/Customization/" not in a
                 ]
+            if unlocks["Class"] == "BP_UnlockScannableResource_C":
+                unlocks_recipes += [
+                    uncamelcase(r.group("name"))
+                    for r in RessourcePattern.finditer(
+                        unlocks["mResourcesToAddToScanner"]
+                    )
+                ]
         deps = []
         for d in r["mSchematicDependencies"]:
             if d["Class"] == "BP_SchematicPurchasedDependency_C":
@@ -75,8 +86,10 @@ def get_research(research: list) -> list[Research]:
                     uncamelcase(a.split(".")[-1].split("_C'")[0])
                     for a in d["mSchematics"].split(",")
                 ]
-        if tier:
-            if tier <= 4:
+        # len(deps) => MAM depends on tech tier
+        if tier or (len(deps) == 0 and r.get("mTechTier", "") != ""):
+            tier = int(r["mTechTier"])
+            if 2 < tier <= 4:
                 deps.append("space-elevator-1")
             elif tier <= 6:
                 deps.append("space-elevator-2")

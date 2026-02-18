@@ -11,7 +11,7 @@ from profiles.recipes import (
 from profiles.research import get_research
 from profiles.utils import purge_optional_fields, dump
 from profiles.machines import get_machines, OVERCLOCKING, UNDERCLOCKING, SUMMERSLOOPING
-from profiles.validate import validate_recipes
+from profiles.validate import validate_recipes, validate_research
 
 
 def construct_profile(data: list) -> dict:
@@ -52,6 +52,7 @@ def construct_profile(data: list) -> dict:
         effectmodules += tmpem
 
     validate_recipes(recipes)
+    validate_research(research)
 
     return purge_optional_fields(
         {
