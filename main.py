@@ -7,11 +7,17 @@ from profiles.recipes import (
     get_recipes,
     get_recipes_from_fluid_extractors,
     get_recipes_from_item_categories,
+    get_recipes_from_nuclear_reactor,
 )
 from profiles.research import get_research
 from profiles.utils import purge_optional_fields, dump
 from profiles.machines import get_machines, OVERCLOCKING, UNDERCLOCKING, SUMMERSLOOPING
 from profiles.validate import validate_recipes, validate_research
+from profiles.machines import (
+    OVERCLOCKING_LIN,
+    UNDERCLOCKING_LIN,
+)
+from profiles.validate import validate_items, validate_machines
 
 
 def construct_profile(data: list) -> dict:
@@ -27,18 +33,27 @@ def construct_profile(data: list) -> dict:
 
     items = []
     for k, v in r.items():
-        if "ItemDescriptor" in k or k in [
-            "ResourceDescriptor",
-            "EquipmentDescriptor",
-            "ConsumableDescriptor",
+        if "Descriptor" in k or k in [
+            "AmmoTypeProjectile",
+            "AmmoTypeSpreadshot",
+            "AmmoTypeInstantHit",
         ]:
             items += get_items(v)
     recipes = get_recipes(r["Recipe"], items)
     recipes += get_recipes_from_fluid_extractors(r["BuildableResourceExtractor"])
     recipes += get_recipes_from_fluid_extractors(r["BuildableFrackingExtractor"])
     recipes += get_recipes_from_item_categories(items)
+    recipes += get_recipes_from_nuclear_reactor(
+        r["BuildableGeneratorNuclear"], r["ItemDescriptorNuclearFuel"]
+    )
 
-    effectmodules = [OVERCLOCKING, UNDERCLOCKING, SUMMERSLOOPING]
+    effectmodules = [
+        OVERCLOCKING,
+        UNDERCLOCKING,
+        SUMMERSLOOPING,
+        OVERCLOCKING_LIN,
+        UNDERCLOCKING_LIN,
+    ]
     research = get_research(r["Schematic"])
     machines = []
     # BuildableManufacturerVariablePower
@@ -46,6 +61,8 @@ def construct_profile(data: list) -> dict:
         "BuildableResourceExtractor",
         "BuildableManufacturer",
         "BuildableFrackingExtractor",
+        "BuildableGeneratorNuclear",
+        "BuildableManufacturerVariablePower",
     ]:
         tmpmachines, tmpem = get_machines(r.get(part, {}))
         machines += tmpmachines
@@ -53,6 +70,8 @@ def construct_profile(data: list) -> dict:
 
     validate_recipes(recipes)
     validate_research(research)
+    validate_items(items, recipes)
+    validate_machines(machines, recipes)
 
     return purge_optional_fields(
         {

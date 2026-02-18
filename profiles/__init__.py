@@ -8,7 +8,6 @@ RessourcePattern = re.compile(r"/Resource/[^/]+/[^/]+/Desc_(?P<name>[^\.]+)[^']+
 @dataclasses.dataclass
 class BaseItemIo:
     id: str
-    type: str
     amount: int
 
 
