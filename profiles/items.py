@@ -18,8 +18,6 @@ def get_items(items: list[dict]) -> list[Item]:
             i["ClassName"],
             ["Desc_", "BP_EquipmentDescriptor", "BP_ItemDescriptor", "BP_EqDesc"],
         )
-        if id == "candy-cane":
-            continue
         name = i["mDisplayName"].replace("\u202f", "").replace("\u2122", "")
         if name == "" and id == "":
             continue
