@@ -1,8 +1,17 @@
 import json
-import sys
 import os
+import sys
+import argparse
 
 from profiles.items import get_items
+from profiles.machines import (
+    OVERCLOCKING,
+    OVERCLOCKING_LIN,
+    SUMMERSLOOPING,
+    UNDERCLOCKING,
+    UNDERCLOCKING_LIN,
+    get_machines,
+)
 from profiles.recipes import (
     get_recipes,
     get_recipes_from_fluid_extractors,
@@ -10,16 +19,8 @@ from profiles.recipes import (
     get_recipes_from_nuclear_reactor,
 )
 from profiles.research import get_research
-from profiles.utils import purge_optional_fields, dump
-from profiles.machines import (
-    get_machines,
-    OVERCLOCKING,
-    UNDERCLOCKING,
-    SUMMERSLOOPING,
-    OVERCLOCKING_LIN,
-    UNDERCLOCKING_LIN,
-)
-from profiles.validate import validate_recipes, validate_items, validate_machines
+from profiles.utils import dump, purge_optional_fields
+from profiles.validate import validate_items, validate_machines, validate_recipes
 
 
 def construct_profile(data: list) -> dict:
@@ -88,17 +89,22 @@ def construct_profile(data: list) -> dict:
 
 
 def main():
-    if len(sys.argv) < 2:
-        print("Please specify a dump file")
+    parser = argparse.ArgumentParser(
+        description="YABFC Profile Generator for Satisfactory dumps"
+    )
+    parser.add_argument("-i", "--input", required=True)
+    parser.add_argument("-o", "--output", default="profile.json")
+
+    args = parser.parse_args()
+
+    if not os.path.exists(args.input):
+        print(f"Could not open file at: '{args.input}'")
         sys.exit(1)
-    fp = sys.argv[1]
-    if not os.path.exists(fp):
-        print(f"Could not open file at: '{fp}'")
-        sys.exit(1)
-    with open(fp, "r", encoding="utf-16") as f:
+
+    with open(args.input, "r", encoding="utf-16") as f:
         dump = json.load(f)
     profile = construct_profile(dump)
-    with open("out.json", "w") as f:
+    with open(args.output, "w") as f:
         json.dump(profile, f, indent=4)
 
 
