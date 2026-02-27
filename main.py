@@ -1,3 +1,4 @@
+from profiles import Settings
 import json
 import os
 import sys
@@ -71,6 +72,10 @@ def construct_profile(data: list) -> dict:
         machines += tmpmachines
         effectmodules += tmpem
 
+    settings = Settings(
+        default_duration=60, all_recipes_unlocked=True, limitations=None
+    )
+
     validate_recipes(recipes)
     validate_items(items, recipes)
     validate_machines(machines, recipes)
@@ -84,6 +89,7 @@ def construct_profile(data: list) -> dict:
             "machines": dump(machines),
             "machineEffects": dump(effectmodules),
             "research": dump(research),
+            "settings": dump(settings),
         }
     )
 

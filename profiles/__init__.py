@@ -3,6 +3,13 @@ from typing import Literal, Union
 
 
 @dataclasses.dataclass
+class Settings:
+    default_duration: int
+    all_recipes_unlocked: bool
+    limitations: list[str] | None
+
+
+@dataclasses.dataclass
 class BaseItemIo:
     id: str
     amount: int
