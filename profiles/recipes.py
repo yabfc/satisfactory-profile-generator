@@ -5,7 +5,7 @@ import re
 ItemIOPattern = re.compile(
     r"/(Parts|Resource/[^/]+|Equipment|Equipment/[^/]+|Buildable/[^/]+|Buildable/[^/]+/[^/]+)/[^/]+/(Desc_|BP_EquipmentDescriptor|BP_EqDesc|BP_ItemDescriptor)(?P<name>[^\.]+)[^']+'.*?Amount=(?P<amount>\d+)"
 )
-RessourcePattern = re.compile(r"/Resource/[^/]+/[^/]+/Desc_(?P<name>[^\.]+)[^']+'")
+ResourcePattern = re.compile(r"/Resource/[^/]+/[^/]+/Desc_(?P<name>[^\.]+)[^']+'")
 
 
 def get_base_item_io(iio: str, itemtype: dict) -> list[BaseItemIo]:
@@ -25,10 +25,10 @@ def get_base_item_io(iio: str, itemtype: dict) -> list[BaseItemIo]:
 def get_recipes_from_item_categories(items: list[Item]) -> list[Recipe]:
     out = []
     for item in items:
-        if item.category not in ["raw-ressource", "organic"] and "waste" not in item.id:
+        if item.category not in ["raw-resource", "organic"] and "waste" not in item.id:
             continue
         category = ""
-        if item.category == "raw-ressource":
+        if item.category == "raw-resource":
             category = "miner"
         elif item.category == "organic":
             category = "manual-harvest"
@@ -99,7 +99,7 @@ def get_recipes_from_fluid_extractors(machines: list[dict]) -> list[Recipe]:
         machine_id = unclassname(machine["ClassName"], ["Build_"])
         fluids = [
             uncamelcase(r.group("name"))
-            for r in RessourcePattern.finditer(machine["mAllowedResources"])
+            for r in ResourcePattern.finditer(machine["mAllowedResources"])
         ]
         amount = int(machine.get("mItemsPerCycle", 0)) // 1000
         for fluid in fluids:
