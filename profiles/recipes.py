@@ -22,7 +22,7 @@ def get_base_item_io(iio: str, itemtype: dict) -> list[BaseItemIo]:
     ]
 
 
-def get_recipes_from_item_categories(items: list[Item]) -> list[Recipe]:
+def get_recipes_from_item_categories(items: list[Item], costs: dict) -> list[Recipe]:
     out = []
     for item in items:
         if item.category not in ["raw-resource", "organic"] and "waste" not in item.id:
@@ -44,7 +44,7 @@ def get_recipes_from_item_categories(items: list[Item]) -> list[Recipe]:
                 [BaseItemIo(item.id, 1)],
                 1,
                 category,
-                10,
+                costs.get(item.id, None),
                 True,
                 None,
             )
@@ -82,7 +82,7 @@ def get_recipes_from_nuclear_reactor(
                     [BaseItemIo(byproduct, byproduct_amt)] if byproduct != "" else [],
                     duration,
                     id,
-                    10,
+                    None,
                     False,
                     None,
                 )
@@ -91,7 +91,9 @@ def get_recipes_from_nuclear_reactor(
     return out
 
 
-def get_recipes_from_fluid_extractors(machines: list[dict]) -> list[Recipe]:
+def get_recipes_from_fluid_extractors(
+    machines: list[dict], costs: dict
+) -> list[Recipe]:
     out = []
     for machine in machines:
         if machine.get("mAllowedResources", "") == "":
@@ -111,7 +113,7 @@ def get_recipes_from_fluid_extractors(machines: list[dict]) -> list[Recipe]:
                     [BaseItemIo(fluid, amount)],
                     1,
                     machine_id,
-                    10,
+                    costs.get(f"{fluid}-{machine_id}", None),
                     True,
                     None,
                 )
@@ -119,7 +121,7 @@ def get_recipes_from_fluid_extractors(machines: list[dict]) -> list[Recipe]:
     return out
 
 
-def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
+def get_recipes(recipes: list[dict], items: list[Item], costs: dict) -> list[Recipe]:
     itemtype = {}
     for i in items:
         itemtype[i.id] = i.type
@@ -166,15 +168,6 @@ def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
         if category[0] == "build-gun" and "beam" in id:
             continue
 
-        if "alternate" in id:
-            prio = 20
-        elif "converter" in category:
-            prio = 40
-        elif "packager" in category:
-            prio = 30
-        else:
-            prio = 10
-
         if category in [["equipment-workshop"], ["build-gun"]]:
             craftable = False
         else:
@@ -188,7 +181,7 @@ def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
                 get_base_item_io(r["mProduct"], itemtype),
                 int(float(r["mManufactoringDuration"])),
                 category[0],
-                prio,
+                costs.get(id),
                 True,
                 craftable,
             )

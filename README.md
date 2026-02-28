@@ -31,7 +31,7 @@ The script will dump the generated profile in the current working directory in t
 ### Example help output
 
 ```
-usage: main.py [-h] -i INPUT [-o OUTPUT]
+usage: main.py [-h] -i INPUT [-o OUTPUT] [-r RESOURCE_COSTS]
 
 YABFC Profile Generator for Satisfactory dumps
 
@@ -39,6 +39,7 @@ options:
   -h, --help            show this help message and exit
   -i INPUT, --input INPUT
   -o OUTPUT, --output OUTPUT  (defaults to profile.json)
+  -r RESOURCE_COSTS, --resource-costs RESOURCE_COSTS
 ```
 
 ## Contributing

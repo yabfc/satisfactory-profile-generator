@@ -23,7 +23,7 @@ class Recipe:
     out: list[BaseItemIo]
     duration: int
     category: str
-    priority: int
+    cost: float | None
     available: bool
     craftable: bool | None
 
