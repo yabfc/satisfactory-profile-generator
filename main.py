@@ -5,7 +5,7 @@ import os
 import sys
 
 from profiles import Settings
-from profiles.items import get_items
+from profiles.items import get_items, purge_items
 from profiles.machines import (
     OVERCLOCKING,
     OVERCLOCKING_LIN,
@@ -19,6 +19,7 @@ from profiles.recipes import (
     get_recipes_from_fluid_extractors,
     get_recipes_from_item_categories,
     get_recipes_from_nuclear_reactor,
+    purge_recipes,
 )
 from profiles.research import get_research
 from profiles.utils import dump, purge_optional_fields
@@ -59,7 +60,6 @@ def construct_profile(data: list) -> dict:
         OVERCLOCKING_LIN,
         UNDERCLOCKING_LIN,
     ]
-    research = get_research(r["Schematic"])
     machines = []
     # BuildableManufacturerVariablePower
     for part in [
@@ -74,6 +74,11 @@ def construct_profile(data: list) -> dict:
         effectmodules += tmpem
 
     conveyors = get_conveyors(r["BuildableConveyorBelt"])
+
+    recipes = purge_recipes(recipes, machines)
+    items = purge_items(items, recipes)
+
+    research = get_research(r["Schematic"], recipes)
 
     settings = Settings(defaultDuration=60, allRecipesUnlocked=True, limitations=None)
 

@@ -1,5 +1,5 @@
 from profiles.utils import unclassname
-from profiles import Item, StackSizeDict
+from profiles import Item, StackSizeDict, Recipe
 
 
 def get_items(items: list[dict]) -> list[Item]:
@@ -53,7 +53,7 @@ def get_items(items: list[dict]) -> list[Item]:
             "beacon",
             "boom-box",
         ]:
-            category = "equipment"
+            continue
         elif id in [
             "adaptive-control-unit",
             "versatile-framework",
@@ -109,3 +109,11 @@ def get_items(items: list[dict]) -> list[Item]:
             )
         )
     return out
+
+
+def purge_items(items: list[Item], recipes: list[Recipe]) -> list[Item]:
+    item_io = set(
+        [item.id for r in recipes for item in r.out]
+        + [item.id for r in recipes for item in r.inp]
+    )
+    return [i for i in items if i.id in item_io]

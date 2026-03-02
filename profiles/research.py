@@ -1,10 +1,11 @@
-from profiles import Research, UnlockRecipe
+from profiles import Research, UnlockRecipe, Recipe
 from profiles.utils import uncamelcase
 import re
 
 
-def get_research(research: list) -> list[Research]:
+def get_research(research: list, recipes: list[Recipe]) -> list[Research]:
     out = []
+    recipe_ids = set([r.id for r in recipes])
     for r in research:
         if r["mType"] in ["EST_ResourceSink", "EST_Custom"]:
             continue
@@ -40,5 +41,12 @@ def get_research(research: list) -> list[Research]:
             deps = None
         if len(unlocks) == 0:
             continue
-        out.append(Research(id, name, [UnlockRecipe("recipe", unlocks)], deps))
+        out.append(
+            Research(
+                id,
+                name,
+                [UnlockRecipe("recipe", list(set(unlocks) & recipe_ids))],
+                deps,
+            )
+        )
     return out

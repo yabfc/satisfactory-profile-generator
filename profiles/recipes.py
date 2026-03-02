@@ -1,4 +1,4 @@
-from profiles import BaseItemIo, Recipe, Item
+from profiles import BaseItemIo, Recipe, Item, Machine
 from profiles.utils import uncamelcase, unclassname
 import re
 
@@ -28,10 +28,12 @@ def get_recipes_from_item_categories(items: list[Item]) -> list[Recipe]:
         if item.category not in ["raw-resource", "organic"] and "waste" not in item.id:
             continue
         category = ""
+        craftable = None
         if item.category == "raw-resource":
             category = "miner"
         elif item.category == "organic":
             category = "manual-harvest"
+            craftable = False
         else:
             # reactors are handled in another function
             continue
@@ -46,7 +48,7 @@ def get_recipes_from_item_categories(items: list[Item]) -> list[Recipe]:
                 category,
                 10,
                 True,
-                None,
+                craftable,
             )
         )
     return out
@@ -161,9 +163,7 @@ def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
                 ]
             ]
 
-        if len(category) == 0:
-            category = ["equipment-workshop"]
-        if category[0] == "build-gun" and "beam" in id:
+        if len(category) == 0 or category[0] == "build-gun" and "beam" in id:
             continue
 
         if "alternate" in id:
@@ -175,7 +175,7 @@ def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
         else:
             prio = 10
 
-        if category in [["equipment-workshop"], ["build-gun"]]:
+        if category in [["build-gun"], ["manual-harvest"]]:
             craftable = False
         else:
             craftable = None
@@ -194,3 +194,11 @@ def get_recipes(recipes: list[dict], items: list[Item]) -> list[Recipe]:
             )
         )
     return out
+
+
+def purge_recipes(recipes: list[Recipe], machines: list[Machine]) -> list[Recipe]:
+    machine_ids = [m.id for m in machines]
+    recipe_ids = [r.id for r in recipes if r.category == "build-gun"]
+
+    cosmetic_buildings = set(recipe_ids) - set(machine_ids)
+    return [r for r in recipes if r.id not in cosmetic_buildings]
