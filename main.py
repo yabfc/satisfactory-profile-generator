@@ -1,3 +1,4 @@
+from profiles.conveyors import get_conveyors
 import argparse
 import json
 import os
@@ -72,6 +73,8 @@ def construct_profile(data: list) -> dict:
         machines += tmpmachines
         effectmodules += tmpem
 
+    conveyors = get_conveyors(r["BuildableConveyorBelt"])
+
     settings = Settings(defaultDuration=60, allRecipesUnlocked=True, limitations=None)
 
     validate_recipes(recipes)
@@ -87,6 +90,7 @@ def construct_profile(data: list) -> dict:
             "machines": dump(machines),
             "machineEffects": dump(effectmodules),
             "research": dump(research),
+            "conveyors": dump(conveyors),
             "settings": dump(settings),
         }
     )

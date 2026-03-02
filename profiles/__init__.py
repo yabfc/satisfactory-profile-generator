@@ -103,6 +103,12 @@ class Research:
     prerequisites: list[str] | None
 
 
+@dataclasses.dataclass
+class Conveyor:
+    id: str
+    speed: float
+
+
 StackSizeDict = {
     "SS_ONE": 1,
     "SS_SMALL": 50,
