@@ -1,9 +1,9 @@
-from profiles import Settings
+import argparse
 import json
 import os
 import sys
-import argparse
 
+from profiles import Settings
 from profiles.items import get_items
 from profiles.machines import (
     OVERCLOCKING,
@@ -72,9 +72,7 @@ def construct_profile(data: list) -> dict:
         machines += tmpmachines
         effectmodules += tmpem
 
-    settings = Settings(
-        default_duration=60, all_recipes_unlocked=True, limitations=None
-    )
+    settings = Settings(defaultDuration=60, allRecipesUnlocked=True, limitations=None)
 
     validate_recipes(recipes)
     validate_items(items, recipes)

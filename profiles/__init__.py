@@ -4,8 +4,8 @@ from typing import Literal, Union
 
 @dataclasses.dataclass
 class Settings:
-    default_duration: int
-    all_recipes_unlocked: bool
+    defaultDuration: int
+    allRecipesUnlocked: bool
     limitations: list[str] | None
 
 
