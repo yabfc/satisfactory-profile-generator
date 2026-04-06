@@ -23,7 +23,7 @@ def get_items(items: list[dict]) -> list[Item]:
             continue
 
         # maybe find a better way for the categorizing
-        if "ore-" in id or id in ["coal", "sam", "raw-quartz", "sulfur"]:
+        if "ore-" in id or id in ["coal", "sam", "raw-quartz", "sulfur", "stone"]:
             category = "raw-resource"
         elif (
             "iron-" in id
