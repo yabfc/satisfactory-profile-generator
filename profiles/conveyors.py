@@ -8,7 +8,8 @@ def get_conveyors(conveyors: list[dict]) -> list[Conveyor]:
         out.append(
             Conveyor(
                 unclassname(conveyor["ClassName"], ["Build_"]),
-                float(conveyor["mSpeed"]) / 60,
+                # somehow the speed is saved per 2 minutes and not 1
+                float(conveyor["mSpeed"]) / 120,
             )
         )
 
