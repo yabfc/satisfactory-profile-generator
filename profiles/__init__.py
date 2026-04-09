@@ -91,6 +91,7 @@ class EffectModule:
     modifiers: list[ModifierType]
     perSlot: bool
     available: bool
+    hidden: bool | None
 
 
 @dataclasses.dataclass

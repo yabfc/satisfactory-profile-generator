@@ -15,6 +15,7 @@ OVERCLOCKING = EffectModule(
     ],
     False,
     True,
+    None,
 )
 UNDERCLOCKING = EffectModule(
     "underclocking",
@@ -24,6 +25,7 @@ UNDERCLOCKING = EffectModule(
     ],
     False,
     True,
+    None,
 )
 
 OVERCLOCKING_LIN = EffectModule(
@@ -33,6 +35,7 @@ OVERCLOCKING_LIN = EffectModule(
         FixedModifier("power", 2.5, False, False, None),
     ],
     False,
+    True,
     True,
 )
 
@@ -44,6 +47,7 @@ UNDERCLOCKING_LIN = EffectModule(
     ],
     False,
     True,
+    True,
 )
 
 SUMMERSLOOPING = EffectModule(
@@ -54,6 +58,7 @@ SUMMERSLOOPING = EffectModule(
     ],
     False,
     True,
+    None,
 )
 
 
@@ -82,6 +87,7 @@ def get_machines(old_machines: list[dict]) -> tuple[list[Machine], list[EffectMo
                     EffectModule(
                         f"crafting-speed-{id}",
                         [FixedModifier("speed", int(1 // cycle), False, True, None)],
+                        True,
                         True,
                         True,
                     )
