@@ -4,7 +4,7 @@ import json
 import os
 import sys
 
-from profiles import Settings
+from profiles import Settings, EffectNameOverride
 from profiles.items import get_items, purge_items
 from profiles.machines import (
     OVERCLOCKING,
@@ -80,7 +80,14 @@ def construct_profile(data: list) -> dict:
 
     research = get_research(r["Schematic"], recipes)
 
-    settings = Settings(defaultDuration=60, allRecipesUnlocked=True, limitations=None)
+    settings = Settings(
+        defaultDuration=60,
+        allRecipesUnlocked=True,
+        limitations=None,
+        effectNameOverride=EffectNameOverride(
+            speed="Overclocking", productivity="Summerslooping"
+        ),
+    )
 
     validate_recipes(recipes)
     validate_items(items, recipes)
