@@ -1,3 +1,4 @@
+from profiles.effects import get_effect_modules
 from profiles.conveyors import get_conveyors
 import argparse
 import json
@@ -7,11 +8,6 @@ import sys
 from profiles import Settings, EffectNameOverride
 from profiles.items import get_items, purge_items
 from profiles.machines import (
-    OVERCLOCKING,
-    OVERCLOCKING_LIN,
-    SUMMERSLOOPING,
-    UNDERCLOCKING,
-    UNDERCLOCKING_LIN,
     get_machines,
 )
 from profiles.recipes import (
@@ -53,13 +49,7 @@ def construct_profile(data: list) -> dict:
         r["BuildableGeneratorNuclear"], r["ItemDescriptorNuclearFuel"]
     )
 
-    effectmodules = [
-        OVERCLOCKING,
-        UNDERCLOCKING,
-        SUMMERSLOOPING,
-        OVERCLOCKING_LIN,
-        UNDERCLOCKING_LIN,
-    ]
+    effectmodules = get_effect_modules()
     machines = []
     # BuildableManufacturerVariablePower
     for part in [
