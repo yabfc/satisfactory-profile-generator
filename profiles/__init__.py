@@ -51,6 +51,7 @@ class MachineFeature:
     effectPerSlot: list[str]
     disables: list[str] | None
     hidden: bool | None
+    modifiable: bool | None
 
 
 @dataclasses.dataclass
@@ -68,7 +69,6 @@ class FixedModifier:
     id: str
     value: float
     modifiable: Literal[False]
-    onlyOutputScales: bool
     valueScaling: None | Literal["exponential"]
 
 
@@ -78,7 +78,6 @@ class VariableModifier:
     minValue: float
     maxValue: float
     modifiable: Literal[True]
-    onlyOutputScales: bool
     valueScaling: None | Literal["exponential"]
 
 

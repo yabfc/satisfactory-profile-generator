@@ -10,8 +10,8 @@ from profiles.utils import unclassname
 OVERCLOCKING = EffectModule(
     "overclocking",
     [
-        VariableModifier("speed", 1, 2.5, True, False, None),
-        FixedModifier("power", 1.321929, False, False, "exponential"),
+        VariableModifier("speed", 1, 2.5, True, None),
+        FixedModifier("power", 1.321929, False, "exponential"),
     ],
     False,
     True,
@@ -20,8 +20,8 @@ OVERCLOCKING = EffectModule(
 UNDERCLOCKING = EffectModule(
     "underclocking",
     [
-        VariableModifier("speed", 0, 1, True, False, None),
-        FixedModifier("power", 1.321929, False, False, "exponential"),
+        VariableModifier("speed", 0, 1, True, None),
+        FixedModifier("power", 1.321929, False, "exponential"),
     ],
     False,
     True,
@@ -31,8 +31,8 @@ UNDERCLOCKING = EffectModule(
 OVERCLOCKING_LIN = EffectModule(
     "overclocking-lin",
     [
-        VariableModifier("speed", 1, 2.5, True, False, None),
-        FixedModifier("power", 2.5, False, False, None),
+        VariableModifier("speed", 1, 2.5, True, None),
+        FixedModifier("power", 2.5, False, None),
     ],
     False,
     True,
@@ -42,8 +42,8 @@ OVERCLOCKING_LIN = EffectModule(
 UNDERCLOCKING_LIN = EffectModule(
     "underclocking-lin",
     [
-        VariableModifier("speed", 0, 1, True, False, None),
-        FixedModifier("power", 1, False, False, None),
+        VariableModifier("speed", 0, 1, True, None),
+        FixedModifier("power", 1, False, None),
     ],
     False,
     True,
@@ -53,8 +53,8 @@ UNDERCLOCKING_LIN = EffectModule(
 SUMMERSLOOPING = EffectModule(
     "summerslooping",
     [
-        FixedModifier("speed", 2, False, True, None),
-        FixedModifier("power", 4, False, False, None),
+        FixedModifier("productivity", 2, False, None),
+        FixedModifier("power", 4, False, None),
     ],
     False,
     True,
@@ -80,13 +80,13 @@ def get_machines(old_machines: list[dict]) -> tuple[list[Machine], list[EffectMo
             if cycle != 1:
                 features.append(
                     MachineFeature(
-                        "crafting-speed", 0, [f"crafting-speed-{id}"], None, True
+                        "crafting-speed", 0, [f"crafting-speed-{id}"], None, True, None
                     )
                 )
                 modules.append(
                     EffectModule(
                         f"crafting-speed-{id}",
-                        [FixedModifier("speed", int(1 // cycle), False, True, None)],
+                        [FixedModifier("speed", int(1 // cycle), False, None)],
                         True,
                         True,
                         True,
@@ -97,7 +97,7 @@ def get_machines(old_machines: list[dict]) -> tuple[list[Machine], list[EffectMo
             if sloops > 0:
                 features.append(
                     MachineFeature(
-                        "summerslooping", sloops, ["summerslooping"], None, None
+                        "summerslooping", sloops, ["summerslooping"], None, None, None
                     )
                 )
         underclock = "underclocking"
@@ -108,8 +108,12 @@ def get_machines(old_machines: list[dict]) -> tuple[list[Machine], list[EffectMo
             underclock = "underclocking-lin"
             overclock = "overclocking-lin"
 
-        features.append(MachineFeature(overclock, 3, [overclock], [underclock], None))
-        features.append(MachineFeature(underclock, 0, [underclock], [overclock], None))
+        features.append(
+            MachineFeature(overclock, 0, [overclock], [underclock], None, True)
+        )
+        features.append(
+            MachineFeature(underclock, 0, [underclock], [overclock], None, True)
+        )
 
         consumption = int(float(machine.get("mPowerConsumption", "0.0")) * 1000 * 1000)
         machines.append(Machine(id, categories, consumption, features, True, None))
