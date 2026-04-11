@@ -64,29 +64,16 @@ class Machine:
 
 
 @dataclasses.dataclass
-class FixedModifier:
+class Modifier:
     id: str
     value: float
-    modifiable: Literal[False]
     valueScaling: None | Literal["exponential"]
-
-
-@dataclasses.dataclass
-class VariableModifier:
-    id: str
-    minValue: float
-    maxValue: float
-    modifiable: Literal[True]
-    valueScaling: None | Literal["exponential"]
-
-
-ModifierType = Union[FixedModifier, VariableModifier]
 
 
 @dataclasses.dataclass
 class BaseEffectModule:
     id: str
-    modifiers: list[ModifierType]
+    modifiers: list[Modifier]
     available: bool = dataclasses.field(default=True, kw_only=True)
     hidden: bool | None = dataclasses.field(default=None, kw_only=True)
     name: str | None = dataclasses.field(default=None, kw_only=True)

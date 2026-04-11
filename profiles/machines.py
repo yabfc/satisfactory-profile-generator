@@ -2,7 +2,7 @@ from profiles import (
     Machine,
     MachineFeature,
     EffectModule,
-    FixedModifier,
+    Modifier,
     FixedEffectModule,
 )
 from profiles.utils import unclassname
@@ -32,7 +32,7 @@ def get_machines(old_machines: list[dict]) -> tuple[list[Machine], list[EffectMo
                 modules.append(
                     FixedEffectModule(
                         f"crafting-speed-{id}",
-                        [FixedModifier("speed", int(1 // cycle), False, None)],
+                        [Modifier("speed", int(1 // cycle), None)],
                         hidden=True,
                     )
                 )

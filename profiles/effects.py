@@ -1,6 +1,6 @@
 from profiles import (
     EffectModule,
-    FixedModifier,
+    Modifier,
     ModifiableEffectModule,
     SteppedEffectModule,
 )
@@ -9,8 +9,8 @@ from profiles import (
 CLOCKING = ModifiableEffectModule(
     "over-underclocking",
     [
-        FixedModifier("speed", 1, False, None),
-        FixedModifier("power", 1.321929, False, "exponential"),
+        Modifier("speed", 1, None),
+        Modifier("power", 1.321929, "exponential"),
     ],
     name="Over/Underclocking",
     minValue=0,
@@ -21,8 +21,8 @@ CLOCKING = ModifiableEffectModule(
 CLOCKING_LIN = ModifiableEffectModule(
     "over-underclocking-lin",
     [
-        FixedModifier("speed", 1, False, None),
-        FixedModifier("power", 1, False, None),
+        Modifier("speed", 1, None),
+        Modifier("power", 1, None),
     ],
     name="Over/Underclocking (linear)",
     minValue=0,
@@ -34,8 +34,8 @@ def get_summersloop_module(step: float) -> SteppedEffectModule:
     return SteppedEffectModule(
         f"summerslooping-{step}",
         [
-            FixedModifier("productivity", 1, False, None),
-            FixedModifier("power", 2, False, None),
+            Modifier("productivity", 1, None),
+            Modifier("power", 2, None),
         ],
         name="Summerslooping",
         minValue=1,
