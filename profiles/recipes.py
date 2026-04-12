@@ -105,6 +105,9 @@ def get_recipes_from_fluid_extractors(machines: list[dict]) -> list[Recipe]:
         ]
         amount = int(machine.get("mItemsPerCycle", 0)) // 1000
         for fluid in fluids:
+            prio = 10
+            if fluid == "water" and machine_id == "fracking-extractor":
+                prio = 15
             out.append(
                 Recipe(
                     f"{fluid}-{machine_id}",
@@ -113,7 +116,7 @@ def get_recipes_from_fluid_extractors(machines: list[dict]) -> list[Recipe]:
                     [BaseItemIo(fluid, amount)],
                     1,
                     machine_id,
-                    10,
+                    prio,
                     True,
                     None,
                 )

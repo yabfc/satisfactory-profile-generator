@@ -42,8 +42,12 @@ def construct_profile(data: list) -> dict:
         ]:
             items += get_items(v)
     recipes = get_recipes(r["Recipe"], items)
-    recipes += get_recipes_from_fluid_extractors(r["BuildableResourceExtractor"])
-    recipes += get_recipes_from_fluid_extractors(r["BuildableFrackingExtractor"])
+    for t in [
+        "BuildableWaterPump",
+        "BuildableResourceExtractor",
+        "BuildableFrackingExtractor",
+    ]:
+        recipes += get_recipes_from_fluid_extractors(r[t])
     recipes += get_recipes_from_item_categories(items)
     recipes += get_recipes_from_nuclear_reactor(
         r["BuildableGeneratorNuclear"], r["ItemDescriptorNuclearFuel"]
@@ -54,6 +58,7 @@ def construct_profile(data: list) -> dict:
     # BuildableManufacturerVariablePower
     for part in [
         "BuildableResourceExtractor",
+        "BuildableWaterPump",
         "BuildableManufacturer",
         "BuildableFrackingExtractor",
         "BuildableGeneratorNuclear",
