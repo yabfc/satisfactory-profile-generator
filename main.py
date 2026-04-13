@@ -1,5 +1,5 @@
 from profiles.effects import get_effect_modules
-from profiles.conveyors import get_conveyors
+from profiles.logistics import get_logistics
 import argparse
 import json
 import os
@@ -68,7 +68,8 @@ def construct_profile(data: list) -> dict:
         machines += tmpmachines
         effectmodules += tmpem
 
-    conveyors = get_conveyors(r["BuildableConveyorBelt"])
+    logistics = get_logistics(r["BuildableConveyorBelt"])
+    logistics += get_logistics(r["BuildablePipeline"])
 
     recipes = purge_recipes(recipes, machines)
     items = purge_items(items, recipes)
@@ -97,7 +98,7 @@ def construct_profile(data: list) -> dict:
             "machines": dump(machines),
             "machineEffects": dump(effectmodules),
             "research": dump(research),
-            "conveyors": dump(conveyors),
+            "logistics": dump(logistics),
             "settings": dump(settings),
         }
     )

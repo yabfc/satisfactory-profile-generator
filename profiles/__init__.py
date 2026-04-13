@@ -121,8 +121,9 @@ class Research:
 
 
 @dataclasses.dataclass
-class Conveyor:
+class Logistic:
     id: str
+    type: str
     speed: float
 
 
