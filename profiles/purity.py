@@ -1,8 +1,12 @@
 from profiles import Machine, Modifier, MachineFeature, FixedEffectModule
 
-IMPURE = FixedEffectModule("node-impure", [Modifier("speed", 0.5)], hidden=True)
-NORMAL = FixedEffectModule("node-normal", [Modifier("speed", 1)], hidden=True)
-PURE = FixedEffectModule("node-pure", [Modifier("speed", 2)], hidden=True)
+IMPURE = FixedEffectModule(
+    "node-impure", [Modifier("speed", 0.5)], name="Impure", hidden=True
+)
+NORMAL = FixedEffectModule(
+    "node-normal", [Modifier("speed", 1)], name="Normal", hidden=True
+)
+PURE = FixedEffectModule("node-pure", [Modifier("speed", 2)], name="Pure", hidden=True)
 
 
 def add_node_purity_features(

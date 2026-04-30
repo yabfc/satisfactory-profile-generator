@@ -3,9 +3,8 @@ from typing import Literal, Union
 
 
 @dataclasses.dataclass
-class EffectNameOverride:
-    speed: str
-    productivity: str
+class nameOverride:
+    quality: str
 
 
 @dataclasses.dataclass
@@ -13,7 +12,7 @@ class Settings:
     defaultDuration: int
     allRecipesUnlocked: bool
     limitations: list[str] | None
-    effectNameOverride: EffectNameOverride
+    nameOverride: nameOverride
 
 
 @dataclasses.dataclass
