@@ -1,3 +1,4 @@
+from profiles.purity import add_node_purity_features
 from profiles.effects import get_effect_modules
 from profiles.logistics import get_logistics
 import argparse
@@ -68,6 +69,8 @@ def construct_profile(data: list) -> dict:
         machines += tmpmachines
         effectmodules += tmpem
 
+    machines, qualitymodules = add_node_purity_features(machines)
+    effectmodules += qualitymodules
     logistics = get_logistics(r["BuildableConveyorBelt"])
     logistics += get_logistics(r["BuildablePipeline"])
 
