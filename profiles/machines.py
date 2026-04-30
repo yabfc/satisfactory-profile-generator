@@ -26,13 +26,13 @@ def get_machines(old_machines: list[dict]) -> tuple[list[Machine], list[EffectMo
             if cycle != 1:
                 features.append(
                     MachineFeature(
-                        "crafting-speed", 0, [f"crafting-speed-{id}"], True, None
+                        "crafting-speed", 0, [f"crafting-speed-{id}"], hidden=True
                     )
                 )
                 modules.append(
                     FixedEffectModule(
                         f"crafting-speed-{id}",
-                        [Modifier("speed", int(1 // cycle), None)],
+                        [Modifier("speed", int(1 // cycle))],
                         hidden=True,
                     )
                 )
@@ -44,8 +44,6 @@ def get_machines(old_machines: list[dict]) -> tuple[list[Machine], list[EffectMo
                         "summerslooping",
                         1,
                         [f"summerslooping-{sloops}"],
-                        None,
-                        None,
                     )
                 )
         clocking = "over-underclocking"
@@ -54,8 +52,8 @@ def get_machines(old_machines: list[dict]) -> tuple[list[Machine], list[EffectMo
         if id == "generator-nuclear":
             clocking += "-lin"
 
-        features.append(MachineFeature(clocking, 1, [clocking], None, True))
+        features.append(MachineFeature(clocking, 1, [clocking], modifiable=True))
 
         consumption = int(float(machine.get("mPowerConsumption", "0.0")) * 1000 * 1000)
-        machines.append(Machine(id, categories, consumption, features, True, None))
+        machines.append(Machine(id, categories, consumption, features, True))
     return (machines, modules)

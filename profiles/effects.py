@@ -9,8 +9,8 @@ from profiles import (
 CLOCKING = ModifiableEffectModule(
     "over-underclocking",
     [
-        Modifier("speed", 1, None),
-        Modifier("power", 1.321929, "exponential"),
+        Modifier("speed", 1),
+        Modifier("power", 1.321929, valueScaling="exponential"),
     ],
     name="Over/Underclocking",
     minValue=0,
@@ -21,8 +21,8 @@ CLOCKING = ModifiableEffectModule(
 CLOCKING_LIN = ModifiableEffectModule(
     "over-underclocking-lin",
     [
-        Modifier("speed", 1, None),
-        Modifier("power", 1, None),
+        Modifier("speed", 1),
+        Modifier("power", 1),
     ],
     name="Over/Underclocking (linear)",
     minValue=0,
@@ -34,8 +34,8 @@ def get_summersloop_module(step: float) -> SteppedEffectModule:
     return SteppedEffectModule(
         f"summerslooping-{step}",
         [
-            Modifier("productivity", 1, None),
-            Modifier("power", 2, None),
+            Modifier("productivity", 1),
+            Modifier("power", 2),
         ],
         name="Summerslooping",
         minValue=1,
@@ -45,7 +45,7 @@ def get_summersloop_module(step: float) -> SteppedEffectModule:
 
 
 def get_effect_modules() -> list[EffectModule]:
-    out = [CLOCKING, CLOCKING_LIN]
+    out: list[EffectModule] = [CLOCKING, CLOCKING_LIN]
     for sloop_steps in [1, 2, 4]:
         out.append(get_summersloop_module(sloop_steps))
 

@@ -49,8 +49,8 @@ class MachineFeature:
     id: str
     itemSlots: int
     effectPerSlot: list[str]
-    hidden: bool | None
-    modifiable: bool | None
+    hidden: bool | None = dataclasses.field(default=None, kw_only=True)
+    modifiable: bool | None = dataclasses.field(default=None, kw_only=True)
 
 
 @dataclasses.dataclass
@@ -60,14 +60,16 @@ class Machine:
     requiredPower: int
     features: list[MachineFeature]
     available: bool
-    limitations: list[str] | None
+    limitations: list[str] | None = dataclasses.field(default=None, kw_only=True)
 
 
 @dataclasses.dataclass
 class Modifier:
     id: str
     value: float
-    valueScaling: None | Literal["exponential"]
+    valueScaling: None | Literal["exponential"] = dataclasses.field(
+        default=None, kw_only=True
+    )
 
 
 @dataclasses.dataclass

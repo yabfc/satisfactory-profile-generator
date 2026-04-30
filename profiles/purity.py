@@ -1,8 +1,8 @@
 from profiles import Machine, Modifier, MachineFeature, FixedEffectModule
 
-IMPURE = FixedEffectModule("node-impure", [Modifier("speed", 0.5, None)])
-NORMAL = FixedEffectModule("node-normal", [Modifier("speed", 1, None)])
-PURE = FixedEffectModule("node-pure", [Modifier("speed", 2, None)])
+IMPURE = FixedEffectModule("node-impure", [Modifier("speed", 0.5)])
+NORMAL = FixedEffectModule("node-normal", [Modifier("speed", 1)])
+PURE = FixedEffectModule("node-pure", [Modifier("speed", 2)])
 
 
 def add_node_purity_features(
@@ -17,7 +17,7 @@ def add_node_purity_features(
             or "fracking-extractor" in machine.recipeCategories
         ):
             machine.features.append(
-                MachineFeature("quality-tiers", 0, module_ids, True, None)
+                MachineFeature("quality-tiers", 0, module_ids, hidden=True)
             )
 
     return (machines, modules)
