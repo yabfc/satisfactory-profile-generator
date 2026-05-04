@@ -79,6 +79,7 @@ class BaseEffectModule:
     hidden: bool | None = dataclasses.field(default=None, kw_only=True)
     name: str | None = dataclasses.field(default=None, kw_only=True)
     singleUse: bool | None = dataclasses.field(default=True, kw_only=True)
+    displayOffset: int | None = dataclasses.field(default=None, kw_only=True)
 
 
 @dataclasses.dataclass
