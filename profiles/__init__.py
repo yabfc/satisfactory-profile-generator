@@ -66,8 +66,8 @@ class Machine:
 class Modifier:
     id: str
     value: float
-    valueScaling: None | Literal["exponential"] = dataclasses.field(
-        default=None, kw_only=True
+    valueScaling: None | Literal["exponential"] | Literal["squared"] = (
+        dataclasses.field(default=None, kw_only=True)
     )
 
 

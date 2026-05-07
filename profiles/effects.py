@@ -37,7 +37,7 @@ def get_summersloop_module(step: float) -> SteppedEffectModule:
         f"summerslooping-{step}",
         [
             Modifier("productivity", 1),
-            Modifier("power", 2),
+            Modifier("power", 1, valueScaling="squared"),
         ],
         name="Summerslooping",
         minValue=0,
